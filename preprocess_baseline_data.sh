@@ -26,4 +26,4 @@ cat baseline/raw_data/tiny_train.en | perl moses_scripts/normalize-punctuation.p
 rm baseline/preprocessed_data/train.de.p
 rm baseline/preprocessed_data/train.en.p
 
-python preprocess.py --target-lang en --source-lang de --dest-dir baseline/prepared_data/ --train-prefix baseline/preprocessed_data/train --valid-prefix baseline/preprocessed_data/valid --test-prefix baseline/preprocessed_data/test --tiny-train-prefix baseline/preprocessed_data/tiny_train --threshold-src 1 --threshold-tgt 1 --num-words-src 4000 --num-words-tgt 4000
+python preprocess.py --target-lang en --source-lang de --dest-dir baseline/prepared_data/ --train-prefix baseline/preprocessed_data/train --valid-prefix baseline/preprocessed_data/valid --test-prefix baseline/preprocessed_data/test --tiny-train-prefix baseline/preprocessed_data/tiny_train --num-words-src 4000 --num-words-tgt 4000
