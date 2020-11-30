@@ -12,6 +12,8 @@ from seq2seq.data.dictionary import Dictionary
 from seq2seq.data.dataset import Seq2SeqDataset, BatchSampler
 from seq2seq.beam import BeamSearch, BeamSearchNode
 
+a = 1.0
+
 
 def get_args():
     """ Defines generation-specific hyper-parameters. """
@@ -79,6 +81,11 @@ def main(args):
         with torch.no_grad():
             # Compute the encoder output
             encoder_out = model.encoder(sample['src_tokens'], sample['src_lengths'])
+            #print("src_tokens:", type(sample['src_tokens']))
+            outlen = len(tgt_dict.string(sample['src_tokens']))
+            print("-words len:", outlen)
+            #print("-size:", list(sample['src_tokens'].size()))
+            #print("-content:", sample['src_tokens'])
             # __QUESTION 1: What is "go_slice" used for and what do its dimensions represent?
             go_slice = \
                 torch.ones(sample['src_tokens'].shape[0], 1).fill_(tgt_dict.eos_idx).type_as(sample['src_tokens'])
@@ -87,6 +94,14 @@ def main(args):
 
             # Compute the decoder output at the first time step
             decoder_out, _ = model.decoder(go_slice, encoder_out)
+
+            #print("Decoder_out:", type(decoder_out)) # <class 'torch.Tensor'>
+            #print("-size:", list(decoder_out.size()))
+            print("-content:", decoder_out)
+
+            lp_y = 1 / (((5 + outlen ** a) / ((5 + 1) ** a)))
+            decoder_out = torch.mul(decoder_out, lp_y)
+            print("-normalized:", decoder_out)
 
             # __QUESTION 2: Why do we keep one top candidate more than the beam size?
             log_probs, next_candidates = torch.topk(torch.log(torch.softmax(decoder_out, dim=2)),
